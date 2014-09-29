@@ -5,3 +5,4 @@
 config/database.yml.jk
 spec/reports
 report.xlsx
+/db/*.sqlite3
