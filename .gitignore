@@ -1,0 +1,7 @@
+.idea
+/.bundle
+/log/*.log
+/tmp
+config/database.yml.jk
+spec/reports
+report.xlsx
