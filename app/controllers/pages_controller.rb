@@ -1,10 +1,12 @@
 class PagesController < ApplicationController
+  expose(:authentication) { PayPalAuthentication }
+
   def home
   end
 
   def store_scope
-    @authentication = PayPalAuthentication.new(paypal_auth_params)
-    if @authentication.save
+    self.authentication = PayPalAuthentication.new(paypal_auth_params)
+    if authentication.save
       redirect_to success_pages_url
     else
       redirect_to error_pages_url

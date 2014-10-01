@@ -9,3 +9,7 @@ bundle exec rails s
 ```
 
 Go to http://localhost:3000
+
+## Production
+
+http://paypal-test.herokuapp.com/
