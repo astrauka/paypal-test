@@ -1,4 +1,5 @@
 class PaymentsController < ApplicationController
+  protect_from_forgery except: :create
   respond_to :json
 
   expose(:pay_pal_api) { PayPalApi.new(params[:user_id]) }
