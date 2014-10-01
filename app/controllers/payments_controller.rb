@@ -5,11 +5,17 @@ class PaymentsController < ApplicationController
   expose(:pay_pal_api) { PayPalApi.new(params[:user_id]) }
 
   def create
-    payment = pay_pal_api.create_payment(params[:correlation_id])
-    if payment.success?
-      respond_with status: :ok
+    begin
+      payment = pay_pal_api.create_payment(params[:correlation_id])
+    rescue PayPal::SDK::Core::Exceptions::ConnectionError => e
+      Rails.logger.info e.message
+      render status: :unauthorized, nothing: true
     else
-      respond_with status: :not_acceptable
+      if payment.success?
+        render status: :ok, nothing: true
+      else
+        render status: :not_acceptable, nothing: true
+      end
     end
   end
 end

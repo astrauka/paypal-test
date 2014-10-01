@@ -6,10 +6,12 @@ class PayPalApi
   end
 
   def future_authentication
+    Rails.logger.info user_id
     @future_authentication ||= PayPalAuthentication.for_user_id(user_id).first
   end
 
   def future_authentication_code
+    Rails.logger.info future_authentication.inspect
     future_authentication.code
   end
 

@@ -5,7 +5,7 @@ class PagesController < ApplicationController
   end
 
   def store_scope
-    self.authentication = PayPalAuthentication.new(paypal_auth_params)
+    self.authentication = PayPalAuthentication.new(paypal_auth_params.merge(user_id: 1))
     if authentication.save
       redirect_to success_pages_url
     else
