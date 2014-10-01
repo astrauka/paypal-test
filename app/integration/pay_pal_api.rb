@@ -20,12 +20,16 @@ class PayPalApi
   end
 
   def access_token
-    Rails.logger.info "##### \n Retrieving access token \n"
-    @access_token ||=
-      PayPal::SDK::OpenIDConnect::DataTypes::Tokeninfo
-       .create_from_refresh_token(future_authentication.refresh_token)
-       .access_token
+    @access_token ||= retrieve_access_token
   end
+
+  def retrieve_access_token
+      Rails.logger.info "##### \n Retrieving access token \n"
+
+      PayPal::SDK::OpenIDConnect::DataTypes::Tokeninfo
+        .create_from_refresh_token(future_authentication.refresh_token)
+        .access_token
+   end
 
   def create_payment(correlation_id)
     payment = PayPal::SDK::REST::FuturePayment.new(future_payment_attributes(token: access_token))
