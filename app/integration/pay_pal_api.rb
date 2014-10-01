@@ -43,6 +43,7 @@ class PayPalApi
   end
 
   def capture(authorization)
+    Rails.logger.info "##### \n Capturing payment \n"
     result = authorization.capture(capture_attributes)
     if result.success?
       Rails.logger.info("CAPTURE success #{result.links.first.href}")
