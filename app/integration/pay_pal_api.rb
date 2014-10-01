@@ -1,4 +1,8 @@
 class PayPalApi
+  def self.config
+    PayPal::SDK::Core::Config.send(:read_configurations)[Rails.env]
+  end
+
   attr_reader :user_id
 
   def initialize(user_id)
@@ -6,12 +10,10 @@ class PayPalApi
   end
 
   def future_authentication
-    Rails.logger.info user_id
     @future_authentication ||= PayPalAuthentication.for_user_id(user_id).first
   end
 
   def future_authentication_code
-    Rails.logger.info future_authentication.inspect
     future_authentication.code
   end
 
@@ -21,6 +23,8 @@ class PayPalApi
 
   def create_payment(correlation_id)
     payment = PayPal::SDK::REST::FuturePayment.new(future_payment_attributes(token: access_token))
+    payment.set_config(self.class.config)
+    Rails.logger.info payment.inspect
     payment.create(correlation_id)
     payment
   end
