@@ -22,4 +22,3 @@ development:
 
 production:
   <<: *default
-  mode: live

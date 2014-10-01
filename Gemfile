@@ -13,6 +13,8 @@ gem 'unicorn'
 
 gem 'rails_12factor', group: :production
 
+gem 'decent_exposure'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.2'
 
