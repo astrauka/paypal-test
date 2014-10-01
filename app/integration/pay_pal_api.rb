@@ -13,20 +13,42 @@ class PayPalApi
     @future_authentication ||= PayPalAuthentication.for_user_id(user_id).first
   end
 
-  def future_authentication_code
-    future_authentication.code
+  def retrieve_refresh_token
+    Rails.logger.info "##### \n Retrieving refresh token \n"
+    result = PayPal::SDK::Core::API::REST.new.token_hash(future_authentication.code)
+    result[:refresh_token]
   end
 
   def access_token
-    @access_token ||= PayPal::SDK::REST::FuturePayment.exch_token(future_authentication_code)
+    Rails.logger.info "##### \n Retrieving access token \n"
+    @access_token ||=
+      PayPal::SDK::OpenIDConnect::DataTypes::Tokeninfo
+       .create_from_refresh_token(future_authentication.refresh_token)
+       .access_token
   end
 
   def create_payment(correlation_id)
     payment = PayPal::SDK::REST::FuturePayment.new(future_payment_attributes(token: access_token))
-    payment.set_config(self.class.config)
-    Rails.logger.info payment.inspect
+
+    Rails.logger.info "##### \n Creating future payment \n"
     payment.create(correlation_id)
+
+    payment.transactions.each do |transaction|
+      transaction.related_resources.each do |related_resource|
+        capture(related_resource.authorization)
+      end
+    end
+
     payment
+  end
+
+  def capture(authorization)
+    result = authorization.capture(capture_attributes)
+    if result.success?
+      Rails.logger.info("CAPTURE success #{result.links.first.href}")
+    else
+      Rails.logger.warn("CAPTURE failure #{result.links.first.href}")
+    end
   end
 
   def future_payment_attributes(params)
@@ -43,8 +65,18 @@ class PayPalApi
           },
           description: "#{user.name} made a payment."
         }
-      ]
+      ],
     }.merge(params)
+  end
+
+  def capture_attributes
+    {
+      amount:{
+        currency:"USD",
+        total:"1.00"
+      },
+      is_final_capture:true,
+    }
   end
 
   def user

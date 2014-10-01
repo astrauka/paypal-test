@@ -1,3 +1,19 @@
+GIT
+  remote: https://github.com/astrauka/rest-api-sdk-ruby.git
+  revision: 1684013f785b1b56cab98b97fa2f550563ab51ba
+  specs:
+    paypal-sdk-rest (0.7.0)
+      paypal-sdk-core (~> 0.3.0)
+      uuidtools (~> 2.1)
+
+GIT
+  remote: https://github.com/astrauka/sdk-core-ruby.git
+  revision: 6076da4f5e44fd93f661a2743c75d342f2e1c233
+  specs:
+    paypal-sdk-core (0.3.0)
+      multi_json (~> 1.0)
+      xml-simple
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -56,12 +72,6 @@ GEM
     mime-types (1.25.1)
     minitest (4.7.5)
     multi_json (1.10.1)
-    paypal-sdk-core (0.3.0)
-      multi_json (~> 1.0)
-      xml-simple
-    paypal-sdk-rest (0.7.0)
-      paypal-sdk-core (~> 0.3.0)
-      uuidtools (~> 2.1)
     pg (0.17.1)
     polyglot (0.3.5)
     pry (0.10.1)
@@ -141,7 +151,8 @@ DEPENDENCIES
   decent_exposure
   jbuilder (~> 1.2)
   jquery-rails
-  paypal-sdk-rest
+  paypal-sdk-core!
+  paypal-sdk-rest!
   pg
   pry-rails
   rails (= 4.0.9)

@@ -8,5 +8,10 @@ PaypalTest::Application.routes.draw do
     get :error
   end
 
-  resources :payments, only: %i(create)
+  resources :payments, only: %i(create) do
+    member {
+      get :execute
+      get :cancel
+    }
+  end
 end

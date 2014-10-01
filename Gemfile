@@ -1,7 +1,10 @@
 source 'https://rubygems.org'
 
 gem 'awesome_print'
-gem 'paypal-sdk-rest'
+gem 'paypal-sdk-core', git: "https://github.com/astrauka/sdk-core-ruby.git"
+gem 'paypal-sdk-rest',
+    # path: '../rest-api-sdk-ruby'
+    git: "https://github.com/astrauka/rest-api-sdk-ruby.git"
 gem 'slim'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
