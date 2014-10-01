@@ -44,7 +44,7 @@ class PayPalApi
 
   def capture(authorization)
     Rails.logger.info "##### \n Capturing payment \n"
-    result = authorization.capture(capture_attributes)
+    result = authorization.capture(capture_attributes(token: access_token))
     if result.success?
       Rails.logger.info("CAPTURE success #{result.links.first.href}")
     else
@@ -70,14 +70,14 @@ class PayPalApi
     }.merge(params)
   end
 
-  def capture_attributes
+  def capture_attributes(params)
     {
       amount:{
         currency:"USD",
         total:"1.00"
       },
       is_final_capture:true,
-    }
+    }.merge(params)
   end
 
   def user
