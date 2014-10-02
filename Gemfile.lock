@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/astrauka/rest-api-sdk-ruby.git
-  revision: 1684013f785b1b56cab98b97fa2f550563ab51ba
+  revision: d4d4ca03fab5035bdf6938886d3570f1e78d0f51
   specs:
     paypal-sdk-rest (0.7.0)
       paypal-sdk-core (~> 0.3.0)

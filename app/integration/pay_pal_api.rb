@@ -13,23 +13,34 @@ class PayPalApi
     @future_authentication ||= PayPalAuthentication.for_user_id(user_id).first
   end
 
+  def refresh_token
+    @refresh_token ||= future_authentication.refresh_token || retrieve_refresh_token
+  end
+
   def retrieve_refresh_token
     Rails.logger.info "##### \n Retrieving refresh token \n"
     result = PayPal::SDK::Core::API::REST.new.token_hash(future_authentication.code)
-    result[:refresh_token]
+    result[:refresh_token] || raise('Invalid refresh token')
+  end
+
+  def user_info
+    @user_info ||= token_info.userinfo
   end
 
   def access_token
-    @access_token ||= retrieve_access_token
+    token_info.access_token
   end
 
-  def retrieve_access_token
-      Rails.logger.info "##### \n Retrieving access token \n"
+  def token_info
+    @token_info ||= retrieve_token_info
+  end
 
-      PayPal::SDK::OpenIDConnect::DataTypes::Tokeninfo
-        .create_from_refresh_token(future_authentication.refresh_token)
-        .access_token
-   end
+  def retrieve_token_info
+    Rails.logger.info "##### \n Retrieving token info \n"
+
+    PayPal::SDK::OpenIDConnect::DataTypes::Tokeninfo
+      .create_from_refresh_token(refresh_token)
+  end
 
   def create_payment(correlation_id)
     payment = PayPal::SDK::REST::FuturePayment.new(future_payment_attributes(token: access_token))
